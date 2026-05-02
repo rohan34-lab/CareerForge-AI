@@ -32,6 +32,85 @@ const fallback = (profile: ProfileInput): PlanOutput => ({
   ]
 });
 
+const asStringArray = (value: unknown): string[] => (Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0) : []);
+
+const parseModelContent = (content: unknown): unknown => {
+  if (typeof content !== 'string') return null;
+
+  const trimmed = content.trim();
+  const normalized = trimmed.startsWith('```')
+    ? trimmed.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')
+    : trimmed;
+
+  return JSON.parse(normalized);
+};
+
+const sanitizePlan = (raw: unknown, profile: ProfileInput): PlanOutput => {
+  const base = fallback(profile);
+  const obj = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
+
+  const roadmap = Array.isArray(obj.roadmap)
+    ? obj.roadmap
+        .map((item) => {
+          const row = item as Record<string, unknown>;
+          return {
+            phase: typeof row?.phase === 'string' ? row.phase : '',
+            actions: asStringArray(row?.actions)
+          };
+        })
+        .filter((item) => item.phase && item.actions.length > 0)
+    : [];
+
+  const projects = Array.isArray(obj.projects)
+    ? obj.projects
+        .map((item) => {
+          const row = item as Record<string, unknown>;
+          return {
+            title: typeof row?.title === 'string' ? row.title : '',
+            impact: typeof row?.impact === 'string' ? row.impact : '',
+            stack: typeof row?.stack === 'string' ? row.stack : ''
+          };
+        })
+        .filter((item) => item.title && item.impact && item.stack)
+    : [];
+
+  const weeklyPlan = Array.isArray(obj.weeklyPlan)
+    ? obj.weeklyPlan
+        .map((item) => {
+          const row = item as Record<string, unknown>;
+          return {
+            week: typeof row?.week === 'string' ? row.week : '',
+            goals: asStringArray(row?.goals)
+          };
+        })
+        .filter((item) => item.week && item.goals.length > 0)
+    : [];
+
+  const skillGap = Array.isArray(obj.skillGap)
+    ? obj.skillGap
+        .map((item) => {
+          const row = item as Record<string, unknown>;
+          return {
+            missingSkill: typeof row?.missingSkill === 'string' ? row.missingSkill : '',
+            whyItMatters: typeof row?.whyItMatters === 'string' ? row.whyItMatters : '',
+            firstAction: typeof row?.firstAction === 'string' ? row.firstAction : ''
+          };
+        })
+        .filter((item) => item.missingSkill && item.whyItMatters && item.firstAction)
+    : [];
+
+  return {
+    summary: typeof obj.summary === 'string' && obj.summary.trim() ? obj.summary : base.summary,
+    topSkills: asStringArray(obj.topSkills).length > 0 ? asStringArray(obj.topSkills) : base.topSkills,
+    roadmap: roadmap.length > 0 ? roadmap : base.roadmap,
+    projects: projects.length > 0 ? projects : base.projects,
+    interviewQuestions: asStringArray(obj.interviewQuestions).length > 0 ? asStringArray(obj.interviewQuestions) : base.interviewQuestions,
+    resumeChecklist: asStringArray(obj.resumeChecklist).length > 0 ? asStringArray(obj.resumeChecklist) : base.resumeChecklist,
+    weeklyPlan: weeklyPlan.length > 0 ? weeklyPlan : base.weeklyPlan,
+    skillGap: skillGap.length > 0 ? skillGap : base.skillGap
+  };
+};
+
 export async function generatePlan(profile: ProfileInput): Promise<PlanOutput> {
   const apiKey = process.env.NVIDIA_NIM_API_KEY;
   if (!apiKey) return fallback(profile);
@@ -55,8 +134,11 @@ export async function generatePlan(profile: ProfileInput): Promise<PlanOutput> {
     if (!res.ok) return fallback(profile);
     const data = await res.json();
     const content = data?.choices?.[0]?.message?.content;
-    const parsed = JSON.parse(content);
-    return parsed as PlanOutput;
+
+    if (typeof content !== 'string') return fallback(profile);
+
+    const parsed = parseModelContent(content);
+    return sanitizePlan(parsed, profile);
   } catch {
     return fallback(profile);
   }
