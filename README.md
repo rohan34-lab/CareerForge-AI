@@ -45,3 +45,7 @@ If `NVIDIA_NIM_API_KEY` is missing or invalid, the app uses structured fallback 
   - and network failures with inline user-visible errors.
 - API route validates `ProfileInput` payloads with Zod and returns structured `400` errors for invalid input.
 - AI output from NVIDIA NIM is sanitized into the expected `PlanOutput` shape; if fields are missing or malformed, deterministic fallback sections are used.
+
+
+## New contributor handoff
+- Start with `NEWCOMER_GUIDE.md` for a practical architecture walkthrough and next learning steps.
