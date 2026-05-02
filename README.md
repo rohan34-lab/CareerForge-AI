@@ -6,6 +6,7 @@ CareerForge AI is a submission-ready student career-prep copilot for the Octo-Un
 - Next.js 14 + TypeScript + Tailwind
 - Server route for AI generation (`/api/generate`)
 - NVIDIA NIM integration with local fallback
+- Zod request validation in API route
 - Demo seed profiles in `data/demoProfiles.json`
 
 ## Run locally
@@ -27,7 +28,7 @@ If `NVIDIA_NIM_API_KEY` is missing or invalid, the app uses structured fallback 
 
 ## Core features
 - Landing hero
-- Onboarding form + role targeting
+- Typed onboarding form + role targeting
 - Personalized plan generation
 - Skill-gap analysis
 - Portfolio project ideas
@@ -36,3 +37,11 @@ If `NVIDIA_NIM_API_KEY` is missing or invalid, the app uses structured fallback 
 - Weekly execution plan
 - Progress tracker
 - One-click demo profile
+
+## Reliability and validation improvements
+- Frontend generation flow handles:
+  - non-OK API responses,
+  - malformed payloads,
+  - and network failures with inline user-visible errors.
+- API route validates `ProfileInput` payloads with Zod and returns structured `400` errors for invalid input.
+- AI output from NVIDIA NIM is sanitized into the expected `PlanOutput` shape; if fields are missing or malformed, deterministic fallback sections are used.
