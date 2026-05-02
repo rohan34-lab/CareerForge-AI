@@ -46,3 +46,8 @@ If `NVIDIA_NIM_API_KEY` is missing or invalid, the app uses structured fallback 
 - API route validates `ProfileInput` payloads with Zod and returns structured `400` errors for invalid input.
 - AI output from NVIDIA NIM is sanitized into the expected `PlanOutput` shape; if fields are missing or malformed, deterministic fallback sections are used.
 
+## Judge submission checklist
+- Load demo profile and click **Generate Plan**.
+- Confirm plan cards render (skills, projects, interview prep, resume, weekly plan).
+- Refresh the page and verify profile/plan/progress persistence.
+- Optionally remove `NVIDIA_NIM_API_KEY` and verify deterministic fallback still returns a usable plan.
