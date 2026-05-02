@@ -1,0 +1,38 @@
+# CareerForge AI
+
+CareerForge AI is a submission-ready student career-prep copilot for the Octo-Universe Hackathon.
+
+## Stack
+- Next.js 14 + TypeScript + Tailwind
+- Server route for AI generation (`/api/generate`)
+- NVIDIA NIM integration with local fallback
+- Demo seed profiles in `data/demoProfiles.json`
+
+## Run locally
+```bash
+npm install
+cp .env.example .env.local
+npm run dev
+```
+Open http://localhost:3000.
+
+## Demo mode
+If `NVIDIA_NIM_API_KEY` is missing or invalid, the app uses structured fallback output so judges can still test complete functionality.
+
+## Deploy to Vercel
+1. Push repo to GitHub.
+2. Import project in Vercel.
+3. Set `NVIDIA_NIM_API_KEY` env var.
+4. Deploy.
+
+## Core features
+- Landing hero
+- Onboarding form + role targeting
+- Personalized plan generation
+- Skill-gap analysis
+- Portfolio project ideas
+- Interview prep questions
+- Resume checklist
+- Weekly execution plan
+- Progress tracker
+- One-click demo profile

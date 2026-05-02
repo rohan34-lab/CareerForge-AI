@@ -1,0 +1,1 @@
+CareerForge AI is a student career-prep copilot that converts a target role and current skill profile into a concrete roadmap, portfolio plan, interview prep set, resume checklist, and weekly action plan. Instead of students guessing what to do next, CareerForge AI gives them a step-by-step execution system they can start today.

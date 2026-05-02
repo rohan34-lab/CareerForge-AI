@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Ava Chen",
+    "targetRole": "Software Engineer Intern",
+    "skillLevel": "Intermediate",
+    "interests": "AI tools, web apps, startup products",
+    "weeklyHours": 8,
+    "strengths": "JavaScript, teamwork, communication",
+    "weakAreas": "System design, backend scaling",
+    "tools": "React, Node.js, Git"
+  },
+  {
+    "name": "Mateo Singh",
+    "targetRole": "Data Analyst",
+    "skillLevel": "Beginner",
+    "interests": "Sports analytics, business insights",
+    "weeklyHours": 6,
+    "strengths": "Statistics basics, curiosity",
+    "weakAreas": "SQL, dashboards",
+    "tools": "Excel, Python"
+  }
+]
